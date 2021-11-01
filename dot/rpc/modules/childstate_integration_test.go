@@ -293,5 +293,6 @@ func setupChildStateStorage(t *testing.T) (*ChildStateModule, common.Hash) {
 	require.NoError(t, err)
 
 	hash, _ := st.Block.GetBlockHash(b.Header.Number)
+	fmt.Println("Hash: ", hash)
 	return NewChildStateModule(st.Storage, st.Block), hash
 }
