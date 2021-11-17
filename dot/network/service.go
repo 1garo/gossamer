@@ -237,6 +237,10 @@ func (s *Service) Start() error {
 		logger.Infof("Started listening on %s", addr)
 	}
 
+	for _, addr := range s.host.h.Addrs() {
+		logger.Infof("Started listening on %s", fmt.Sprintf("        %s/p2p/%s\n", addr, s.host.h.ID().Pretty()))
+	}
+
 	s.startPeerSetHandler()
 
 	if !s.noMDNS {
@@ -753,14 +757,14 @@ func (s *Service) processMessage(msg peerset.Message) {
 
 		err := s.host.connect(addrInfo)
 		if err != nil {
-			logger.Debugf("failed to open connection for peer %s: %s", peerID, err)
+			logger.Errorf("failed to open connection for peer %s,\n address info %s\n: %s", peerID, addrInfo.String(), err)
 			return
 		}
 		logger.Debugf("connection successful with peer %s", peerID)
 	case peerset.Drop, peerset.Reject:
 		err := s.host.closePeer(peerID)
 		if err != nil {
-			logger.Debugf("failed to close connection with peer %s: %s", peerID, err)
+			logger.Errorf("failed to close connection with peer %s: %s", peerID, err)
 			return
 		}
 		logger.Debugf("connection dropped successfully for peer %s", peerID)

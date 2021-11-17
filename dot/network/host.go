@@ -124,6 +124,7 @@ func newHost(ctx context.Context, cfg *Config) (*host, error) {
 
 	// set libp2p host options
 	opts := []libp2p.Option{
+		libp2p.DefaultTransports,
 		libp2p.ListenAddrs(addr),
 		libp2p.DisableRelay(),
 		libp2p.Identity(cfg.privateKey),
@@ -236,12 +237,22 @@ func (h *host) bootstrap() {
 	for _, info := range h.persistentPeers {
 		h.h.Peerstore().AddAddrs(info.ID, info.Addrs, peerstore.PermanentAddrTTL)
 		h.cm.peerSetHandler.AddReservedPeer(0, info.ID)
+
+		err := h.connect(info)
+		if err != nil {
+			logger.Debugf("failed to bootstrap to peer, error: %s", err)
+		}
 	}
 
 	for _, addrInfo := range h.bootnodes {
 		logger.Debugf("bootstrapping to peer %s", addrInfo.ID)
 		h.h.Peerstore().AddAddrs(addrInfo.ID, addrInfo.Addrs, peerstore.PermanentAddrTTL)
 		h.cm.peerSetHandler.AddPeer(0, addrInfo.ID)
+
+		err := h.connect(addrInfo)
+		if err != nil {
+			logger.Debugf("failed to bootstrap to peer, error: %s", err)
+		}
 	}
 }
 
