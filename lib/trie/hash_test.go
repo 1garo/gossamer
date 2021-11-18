@@ -33,13 +33,11 @@ func TestHashLeaf(t *testing.T) {
 
 	buffer := bytes.NewBuffer(nil)
 	const parallel = false
+
 	err := encodeNode(n, buffer, parallel)
 
-	if err != nil {
-		t.Errorf("did not hash leaf node: %s", err)
-	} else if buffer.Len() == 0 {
-		t.Errorf("did not hash leaf node: nil")
-	}
+	require.NoError(t, err)
+	assert.NotZero(t, buffer.Len())
 }
 
 func TestHashBranch(t *testing.T) {
@@ -48,13 +46,11 @@ func TestHashBranch(t *testing.T) {
 
 	buffer := bytes.NewBuffer(nil)
 	const parallel = false
+
 	err := encodeNode(n, buffer, parallel)
 
-	if err != nil {
-		t.Errorf("did not hash branch node: %s", err)
-	} else if buffer.Len() == 0 {
-		t.Errorf("did not hash branch node: nil")
-	}
+	require.NoError(t, err)
+	assert.NotZero(t, buffer.Len())
 }
 
 func TestHashShort(t *testing.T) {
@@ -72,4 +68,78 @@ func TestHashShort(t *testing.T) {
 	err = hashNode(n, digestBuffer)
 	require.NoError(t, err)
 	assert.Equal(t, encodingBuffer.Bytes(), digestBuffer.Bytes())
+}
+
+func Test_encodeChildsSequentially(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		children [16]node
+		expected []byte
+		err      error
+	}{
+		"nil children": {},
+	}
+
+	for name, testCase := range testCases {
+		testCase := testCase
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			buffer := bytes.NewBuffer(nil)
+			err := encodeChildsSequentially(testCase.children, buffer)
+
+			if testCase.err != nil {
+				assert.EqualError(t, err, testCase.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+
+			assert.Equal(t, testCase.expected, buffer.Bytes())
+		})
+	}
+}
+
+func Test_encodeChild(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		child    node
+		expected []byte
+		err      error
+	}{
+		"nil node": {},
+		"nil leaf": {
+			child: (*leaf)(nil),
+		},
+		"nil branch": {
+			child: (*branch)(nil),
+		},
+		"empty leaf child": {
+			child:    &leaf{},
+			expected: []byte{0x8, 0x40, 0x0},
+		},
+		"empty branch child": {
+			child:    &branch{},
+			expected: []byte{0xc, 0x80, 0x0, 0x0},
+		},
+	}
+
+	for name, testCase := range testCases {
+		testCase := testCase
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			buffer := bytes.NewBuffer(nil)
+			err := encodeChild(testCase.child, buffer)
+
+			if testCase.err != nil {
+				assert.EqualError(t, err, testCase.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+
+			assert.Equal(t, testCase.expected, buffer.Bytes())
+		})
+	}
 }
