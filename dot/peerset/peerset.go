@@ -326,8 +326,10 @@ func (ps *PeerSet) reportPeer(change ReputationChange, peers ...peer.ID) error {
 
 // allocSlots tries to fill available outgoing slots of nodes for the given set.
 func (ps *PeerSet) allocSlots(setIdx int) error {
+	fmt.Println("peerset/peerset allocSlots 329")
 	err := ps.updateTime()
 	if err != nil {
+		logger.Errorf(err.Error())
 		return err
 	}
 
@@ -344,14 +346,17 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 		var n *node
 		n, err = ps.peerState.getNode(reservePeer)
 		if err != nil {
+			logger.Errorf(err.Error())
 			return err
 		}
 
 		if n.getReputation() < BannedThresholdValue {
+			logger.Warnf("reputation is lower than banned threshold value")
 			break
 		}
 
 		if err = peerState.tryOutgoing(setIdx, reservePeer); err != nil {
+			logger.Errorf(err.Error())
 			return err
 		}
 
@@ -365,12 +370,17 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 	}
 	// nothing more to do if we're in reserved mode.
 	if ps.isReservedOnly {
+		fmt.Println("peerset/peerset allocSlots 373")
 		return nil
 	}
 
 	for peerState.hasFreeOutgoingSlot(setIdx) {
+		fmt.Println("peerset/peerset allocSlots 378")
+
 		peerID := peerState.highestNotConnectedPeer(setIdx)
 		if peerID == "" {
+			fmt.Println("peerset/peerset allocSlots 82")
+
 			break
 		}
 
@@ -381,6 +391,7 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 		}
 
 		if err = peerState.tryOutgoing(setIdx, peerID); err != nil {
+			logger.Errorf(err.Error())
 			break
 		}
 
@@ -389,6 +400,7 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 			setID:  uint64(setIdx),
 			PeerID: peerID,
 		}
+		fmt.Println("peerset/peerset allocSlots 403")
 
 		logger.Debugf("Sent connect message to peer %s", peerID)
 	}
