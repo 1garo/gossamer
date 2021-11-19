@@ -404,7 +404,9 @@ func (n *Node) Stop() {
 	n.wg.Done()
 }
 
-func loadRuntime(cfg *Config, ns *runtime.NodeStorage, stateSrvc *state.Service, ks *keystore.GlobalKeystore, net *network.Service) error {
+func loadRuntime(cfg *Config, ns *runtime.NodeStorage,
+	stateSrvc *state.Service, ks *keystore.GlobalKeystore,
+	net *network.Service) error {
 	blocks := stateSrvc.Block.GetNonFinalisedBlocks()
 	runtimeCode := make(map[string]runtime.Instance)
 	for i := range blocks {
