@@ -750,10 +750,12 @@ func (s *Service) processMessage(msg peerset.Message) {
 			var err error
 			addrInfo, err = s.host.discovery.findPeer(peerID)
 			if err != nil {
-				logger.Debugf("failed to find peer id %s: %s", peerID, err)
+				logger.Errorf("failed to find peer id %s: %s", peerID, err)
 				return
 			}
 		}
+
+		fmt.Println("network/service processMessage 758")
 
 		err := s.host.connect(addrInfo)
 		if err != nil {

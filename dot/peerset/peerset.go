@@ -360,6 +360,8 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 			setID:  uint64(setIdx),
 			PeerID: reservePeer,
 		}
+		fmt.Println("peerset/peerset allocSlots 363")
+
 	}
 	// nothing more to do if we're in reserved mode.
 	if ps.isReservedOnly {
@@ -474,6 +476,8 @@ func (ps *PeerSet) addPeer(setID int, peers peer.IDSlice) error {
 		if ps.peerState.peerStatus(setID, pid) != unknownPeer {
 			return nil
 		}
+
+		fmt.Println("peerset/peerset addPeer 478")
 
 		ps.peerState.discover(setID, pid)
 		if err := ps.allocSlots(setID); err != nil {
@@ -646,6 +650,8 @@ func (ps *PeerSet) doWork() {
 			case reportPeer:
 				err = ps.reportPeer(act.reputation, act.peers...)
 			case addToPeerSet:
+				fmt.Println("peerset/peerset doWork 649")
+
 				err = ps.addPeer(act.setID, act.peers)
 			case removeFromPeerSet:
 				err = ps.removePeer(act.setID, act.peers...)

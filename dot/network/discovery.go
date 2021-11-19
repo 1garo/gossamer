@@ -210,6 +210,7 @@ func (d *discovery) findPeers(ctx context.Context) {
 			// 	return
 			// }
 
+			fmt.Println("network/discovery findPeer 213")
 			d.h.Peerstore().AddAddrs(peer.ID, peer.Addrs, peerstore.PermanentAddrTTL)
 			d.handler.AddPeer(0, peer.ID)
 		}
