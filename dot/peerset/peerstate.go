@@ -40,7 +40,7 @@ type Info struct {
 	// number of slot occupying nodes for which the MembershipState is ingoing.
 	numIn uint32
 
-	// number of slot occupying nodes for which the MembershipState is ingoing.
+	// number of slot occupying nodes for which the MembershipState is outgoing.
 	numOut uint32
 
 	// maximum allowed number of slot occupying nodes for which the MembershipState is ingoing.
@@ -128,8 +128,8 @@ func NewPeerState(cfgs []*config) (*PeersState, error) {
 		info := Info{
 			numIn:       0,
 			numOut:      0,
-			maxIn:       cfg.inPeers,
-			maxOut:      cfg.outPeers,
+			maxIn:       cfg.maxInPeers,
+			maxOut:      cfg.maxOutPeers,
 			noSlotNodes: make(map[peer.ID]struct{}),
 		}
 

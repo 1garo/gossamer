@@ -155,9 +155,9 @@ type PeerSet struct {
 // config is configuration of a single set.
 type config struct {
 	// maximum number of slot occupying nodes for incoming connections.
-	inPeers uint32
+	maxInPeers uint32
 	// maximum number of slot occupying nodes for outgoing connections.
-	outPeers uint32
+	maxOutPeers uint32
 
 	// TODO Use in future for reserved only peers
 	// if true, we only accept reservedNodes (#1888).
@@ -175,8 +175,8 @@ type ConfigSet struct {
 // NewConfigSet creates a new config set for the peerSet
 func NewConfigSet(in, out uint32, reservedOnly bool, allocTime time.Duration) *ConfigSet {
 	set := &config{
-		inPeers:           in,
-		outPeers:          out,
+		maxInPeers:        in,
+		maxOutPeers:       out,
 		reservedOnly:      reservedOnly,
 		periodicAllocTime: allocTime,
 	}
