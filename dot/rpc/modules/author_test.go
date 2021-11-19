@@ -289,7 +289,6 @@ func TestAuthorModule_SubmitExtrinsic(t *testing.T) {
 			var err error
 			if err = am.SubmitExtrinsic(tt.args.r, tt.args.req, tt.args.res); (err != nil) != tt.wantErr {
 				t.Errorf("AuthorModule.SubmitExtrinsic() error = %v, wantErr %v", err, tt.wantErr)
-				return
 			}
 			if tt.wantErr {
 				assert.EqualError(t, err, tt.err.Error())
@@ -365,7 +364,6 @@ func TestAuthorModule_PendingExtrinsics(t *testing.T) {
 			var err error
 			if err = cm.PendingExtrinsics(tt.args.r, tt.args.req, tt.args.res); (err != nil) != tt.wantErr {
 				t.Errorf("AuthorModule.PendingExtrinsics() error = %v, wantErr %v", err, tt.wantErr)
-				return
 			}
 			if tt.wantErr {
 				assert.EqualError(t, err, tt.err.Error())
@@ -486,7 +484,6 @@ func TestAuthorModule_InsertKey(t *testing.T) {
 			var err error
 			if err = am.InsertKey(tt.args.r, tt.args.req, tt.args.res); (err != nil) != tt.wantErr {
 				t.Errorf("AuthorModule.InsertKey() error = %v, wantErr %v", err, tt.wantErr)
-				return
 			}
 			if tt.wantErr {
 				assert.EqualError(t, err, tt.err.Error())
@@ -575,7 +572,6 @@ func TestAuthorModule_HasKey(t *testing.T) {
 			var err error
 			if err = cm.HasKey(tt.args.r, tt.args.req, tt.args.res); (err != nil) != tt.wantErr {
 				t.Errorf("AuthorModule.HasKey() error = %v, wantErr %v", err, tt.wantErr)
-				return
 			}
 			if tt.wantErr {
 				assert.EqualError(t, err, tt.err.Error())
