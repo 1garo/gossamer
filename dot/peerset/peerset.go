@@ -335,6 +335,8 @@ func (ps *PeerSet) allocSlots(setIdx int) error {
 
 	peerState := ps.peerState
 	for reservePeer := range ps.reservedNode {
+		fmt.Println("peerset/peerset looping in reserve peer")
+
 		status := peerState.peerStatus(setIdx, reservePeer)
 		switch status {
 		case connectedPeer:

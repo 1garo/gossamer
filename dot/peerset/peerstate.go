@@ -4,6 +4,7 @@
 package peerset
 
 import (
+	"fmt"
 	"math"
 	"sort"
 	"time"
@@ -225,6 +226,7 @@ func (ps *PeersState) highestNotConnectedPeer(set int) peer.ID {
 }
 
 func (ps *PeersState) hasFreeOutgoingSlot(set int) bool {
+	fmt.Printf("ps.sets[set].numOut: %d < ps.sets[set].maxOut: %d\n", ps.sets[set].numOut, ps.sets[set].maxOut)
 	return ps.sets[set].numOut < ps.sets[set].maxOut
 }
 
